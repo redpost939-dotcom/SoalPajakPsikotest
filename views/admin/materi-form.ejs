@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title: 'Form Materi' }) %>
+<div class="crumbs"><a href="/">Beranda</a> &raquo; <a href="/admin">Admin</a> &raquo; <a href="/admin/materi">Materi</a> &raquo; <%= materi ? 'Edit' : 'Baru' %></div>
+<%- include('_nav') %>
+
+<section class="section form-card">
+  <h1><%= materi ? 'Edit Materi' : 'Materi Baru' %></h1>
+  <% if (pesan) { %><div class="alert alert-error"><%= pesan %></div><% } %>
+  <form method="post" action="/admin/materi/simpan">
+    <% if (materi) { %><input type="hidden" name="id" value="<%= materi.id %>"><% } %>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Kategori *</label>
+        <select name="category_id">
+          <% kategoris.forEach(k => { %>
+            <option value="<%= k.id %>" <%= materi && materi.category_id === k.id ? 'selected' : '' %>><%= k.tipe %> - <%= k.nama %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Urutan</label>
+        <input type="number" name="urutan" value="<%= materi ? materi.urutan : 1 %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Judul *</label>
+      <input type="text" name="judul" value="<%= materi ? materi.judul : '' %>" required>
+    </div>
+    <div class="form-group">
+      <label>Isi (HTML diperbolehkan: &lt;p&gt;, &lt;table&gt;, &lt;ul&gt;, dll) *</label>
+      <textarea name="isi" rows="14" required><%= materi ? materi.isi : '' %></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Simpan</button>
+    <a class="btn btn-outline" href="/admin/materi">Batal</a>
+  </form>
+</section>
+<%- include('../partials/footer') %>

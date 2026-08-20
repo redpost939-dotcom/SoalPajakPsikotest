@@ -1,0 +1,67 @@
+<%- include('../partials/header', { title: 'Hasil ' + hasil.kategori }) %>
+<div class="crumbs">
+  <a href="/">Beranda</a> &raquo;
+  <% if (hasil.tipe === 'psikotest') { %><a href="/psikotest">Psikotest</a><% } else { %><a href="/belajar">Akuntansi &amp; Pajak</a><% } %>
+  &raquo; <%= hasil.kategori %>
+</div>
+
+<section class="result-card">
+  <h1>Hasil Tes</h1>
+  <p class="muted"><%= hasil.kategori %><% if (hasil.level && hasil.level !== 'semua') { %> &middot; Level <%= hasil.level.charAt(0).toUpperCase() + hasil.level.slice(1) %><% } %></p>
+  <div class="score-ring <%= hasil.skor >= 70 ? 'good' : hasil.skor >= 50 ? 'mid' : 'bad' %>">
+    <div class="score-num"><%= hasil.skor %>%</div>
+    <div class="score-sub">Benar <%= hasil.benar %> dari <%= hasil.total %> soal</div>
+  </div>
+  <% if (hasil.skor >= 70) { %>
+    <p class="verdict good-text">Bagus! Kamu menguasai materi ini. Lanjutkan ke kategori/modul berikutnya.</p>
+  <% } else if (hasil.skor >= 50) { %>
+    <p class="verdict mid-text">Cukup baik. Pelajari kembali pembahasan di bawah untuk soal yang salah.</p>
+  <% } else { %>
+    <p class="verdict bad-text">Perlu belajar lagi. Baca pembahasan di bawah, lalu coba ulangi.</p>
+  <% } %>
+
+  <% if (hasil.penilaian) { %>
+    <div class="penilaian">
+      <h2>Penilaian Akhir</h2>
+      <table class="table">
+        <tr><td><b>Kategori</b></td><td><%= hasil.penilaian.nama %></td></tr>
+        <tr><td><b>Yang diukur</b></td><td><%= hasil.penilaian.pengukuran %></td></tr>
+        <tr><td><b>Hasil</b></td><td><%= hasil.penilaian.benar %> benar dari <%= hasil.penilaian.total %> soal (<%= hasil.penilaian.skor %>% / <b><%= hasil.penilaian.predikat %></b>)</td></tr>
+        <tr><td><b>Saran</b></td><td><%= hasil.penilaian.saran %></td></tr>
+      </table>
+    </div>
+  <% } %>
+
+  <div class="quiz-nav">
+    <a class="btn" href="<%= alur %>">Kembali ke Daftar</a>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Kunci Jawaban &amp; Pembahasan</h2>
+  <% hasil.review.forEach(r => { %>
+    <div class="review <%= r.isBenar ? 'review-ok' : 'review-wrong' %>">
+      <div class="review-head">
+        <span class="badge <%= r.isBenar ? 'ok' : 'no' %>"><%= r.isBenar ? 'BENAR' : 'SALAH' %></span>
+        <span>Soal <%= r.nomor %></span>
+      </div>
+      <p><%= r.soal.pertanyaan %></p>
+      <% if (r.soal.diagram) { %>
+        <pre class="diagram"><%= r.soal.diagram %></pre>
+      <% } %>
+      <ul class="optlist">
+        <% r.soal.opsi.forEach((op, i) => { %>
+          <li class="<%= (i+1) === r.soal.kunci ? 'opt-kunci' : '' %> <%= (i+1) === r.jawabanUser && (i+1) !== r.soal.kunci ? 'opt-salah' : '' %>">
+            <b><%= 'ABCDE'[i] %>.</b> <%= op %>
+            <% if ((i+1) === r.soal.kunci) { %><span class="tag">Kunci</span><% } %>
+            <% if ((i+1) === r.jawabanUser && (i+1) !== r.soal.kunci) { %><span class="tag">Jawabanmu</span><% } %>
+          </li>
+        <% }) %>
+      </ul>
+      <% if (r.soal.pembahasan) { %>
+        <div class="pembahasan"><b>Pembahasan:</b> <%= r.soal.pembahasan %></div>
+      <% } %>
+    </div>
+  <% }) %>
+</section>
+<%- include('../partials/footer') %>

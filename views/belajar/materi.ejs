@@ -1,0 +1,25 @@
+<%- include('../partials/header', { title: modul.nama }) %>
+<div class="crumbs"><a href="/">Beranda</a> &raquo; <a href="/belajar">Akuntansi &amp; Pajak</a> &raquo; <%= modul.nama %></div>
+
+<section class="section">
+  <div class="section-head"><h1><%= modul.nama %></h1></div>
+  <p><%= modul.deskripsi %></p>
+
+  <div class="material-list">
+    <% materi.forEach((m, i) => { %>
+      <article class="material">
+        <h2><%= i+1 %>. <%= m.judul %></h2>
+        <div class="material-body"><%- m.isi %></div>
+      </article>
+    <% }) %>
+  </div>
+
+  <div class="quiz-start">
+    <h2>Latihan Soal Modul Ini</h2>
+    <p class="muted"><%= jmlSoal %> soal pilihan ganda. Setelah selesai Anda bisa melihat kunci jawaban dan pembahasan.</p>
+    <form method="post" action="/belajar/<%= modul.kode %>/mulai">
+      <button class="btn btn-primary" type="submit" <%= jmlSoal === 0 ? 'disabled' : '' %>>Mulai Kuis &rarr;</button>
+    </form>
+  </div>
+</section>
+<%- include('../partials/footer') %>

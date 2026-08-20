@@ -1,0 +1,21 @@
+<%- include('../partials/header', { title: 'Psikotest' }) %>
+<div class="crumbs"><a href="/">Beranda</a> &raquo; Psikotest</div>
+<section class="section">
+  <div class="section-head">
+    <h1>Pilih Kategori Psikotest</h1>
+  </div>
+  <p class="muted">Kerjakan sesuai urutan tes asli. Pada tiap kategori, Anda bisa memilih level: <b>Mudah</b>, <b>Sedang</b>, <b>Sulit</b>, atau <b>Semua (bertahap)</b>.</p>
+  <div class="dash-grid">
+    <% kategoris.forEach(k => { %>
+      <a class="tile" href="/psikotest/<%= k.kode %>" style="--c1:<%= k.c1 %>;--c2:<%= k.c2 %>;">
+        <span class="tile-ico"><%= k.i %></span>
+        <span class="tile-body">
+          <h3><%= k.nama %></h3>
+          <p><%= k.deskripsi %></p>
+          <span class="badge tile-badge"><%= k.jml_soal %> soal</span>
+        </span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+<%- include('../partials/footer') %>

@@ -1,0 +1,62 @@
+<%- include('../partials/header', { title: 'Form Soal' }) %>
+<div class="crumbs"><a href="/">Beranda</a> &raquo; <a href="/admin">Admin</a> &raquo; <a href="/admin/soal">Soal</a> &raquo; <%= soal ? 'Edit' : 'Baru' %></div>
+<%- include('_nav') %>
+
+<section class="section form-card">
+  <h1><%= soal ? 'Edit Soal' : 'Soal Baru' %></h1>
+  <% if (pesan) { %><div class="alert alert-error"><%= pesan %></div><% } %>
+  <form method="post" action="/admin/soal/simpan">
+    <% if (soal) { %><input type="hidden" name="id" value="<%= soal.id %>"><% } %>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Kategori *</label>
+        <select name="category_id">
+          <% kategoris.forEach(k => { %>
+            <option value="<%= k.id %>" <%= soal && soal.category_id === k.id ? 'selected' : '' %>><%= k.tipe %> - <%= k.nama %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Level</label>
+        <select name="level">
+          <% ['mudah','sedang','sulit'].forEach(l => { %>
+            <option value="<%= l %>" <%= soal && soal.level === l ? 'selected' : '' %>><%= l %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Urutan</label>
+        <input type="number" name="nomor_urutan" value="<%= soal ? soal.nomor_urutan : 1 %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pertanyaan *</label>
+      <textarea name="pertanyaan" rows="3" required><%= soal ? soal.pertanyaan : '' %></textarea>
+    </div>
+    <div class="form-group">
+      <label>Diagram (ASCII / opsional)</label>
+      <textarea name="diagram" rows="5" placeholder="Bisa diisi teks diagram seperti:&#10;+---+---+&#10;|   |   |&#10;+---+---+"><%= soal && soal.diagram ? soal.diagram : '' %></textarea>
+    </div>
+    <div class="form-row">
+      <% [1,2,3,4,5].forEach(i => { %>
+        <div class="form-group">
+          <label>Opsi <%= 'ABCDE'[i-1] %></label>
+          <input type="text" name="opsi<%= i %>" value="<%= soal && soal.opsi[i-1] ? soal.opsi[i-1] : '' %>">
+        </div>
+      <% }) %>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Kunci Jawaban (nomor opsi) *</label>
+        <input type="number" name="kunci" min="1" max="5" value="<%= soal ? soal.kunci : 1 %>" required>
+      </div>
+      <div class="form-group">
+        <label>Pembahasan</label>
+        <textarea name="pembahasan" rows="3"><%= soal && soal.pembahasan ? soal.pembahasan : '' %></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Simpan</button>
+    <a class="btn btn-outline" href="/admin/soal">Batal</a>
+  </form>
+</section>
+<%- include('../partials/footer') %>

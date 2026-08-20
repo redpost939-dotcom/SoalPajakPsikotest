@@ -1,0 +1,34 @@
+<%- include('../partials/header', { title: 'Kategori' }) %>
+<div class="crumbs"><a href="/">Beranda</a> &raquo; <a href="/admin">Admin</a> &raquo; Kategori</div>
+<%- include('_nav') %>
+
+<section class="section">
+  <div class="section-head">
+    <h1>Kelola Kategori</h1>
+    <a class="btn" href="/admin/kategori/baru">+ Kategori Baru</a>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Urutan</th><th>Tipe</th><th>Kode</th><th>Nama</th><th>Soal</th><th>Materi</th><th>Aksi</th></tr></thead>
+      <tbody>
+        <% daftar.forEach(k => { %>
+          <tr>
+            <td><%= k.urutan %></td>
+            <td><%= k.tipe %></td>
+            <td><code><%= k.kode %></code></td>
+            <td><%= k.nama %></td>
+            <td><%= k.jml_soal %></td>
+            <td><%= k.jml_materi %></td>
+            <td class="actions">
+              <a class="btn btn-sm btn-outline" href="/admin/kategori/<%= k.id %>/edit">Edit</a>
+              <form method="post" action="/admin/kategori/<%= k.id %>/hapus" onsubmit="return confirm('Hapus kategori ini? Soal & materi terkait ikut terhapus.')">
+                <button class="btn btn-sm btn-danger" type="submit">Hapus</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<%- include('../partials/footer') %>

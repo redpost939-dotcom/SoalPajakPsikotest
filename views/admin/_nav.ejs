@@ -1,0 +1,8 @@
+<nav class="admin-nav">
+  <a href="/admin" class="<%= path === '/admin' ? 'on' : '' %>">Dashboard</a>
+  <a href="/admin/kategori" class="<%= path.indexOf('/kategori') !== -1 ? 'on' : '' %>">Kategori</a>
+  <a href="/admin/soal" class="<%= path.indexOf('/soal') !== -1 ? 'on' : '' %>">Soal</a>
+  <a href="/admin/materi" class="<%= path.indexOf('/materi') !== -1 ? 'on' : '' %>">Materi</a>
+  <a href="/admin/user" class="<%= path.indexOf('/user') !== -1 ? 'on' : '' %>">Pengguna</a>
+  <a href="/admin/hasil" class="<%= path.indexOf('/hasil') !== -1 ? 'on' : '' %>">Hasil Tes</a>
+</nav>

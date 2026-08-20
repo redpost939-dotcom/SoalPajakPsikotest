@@ -1,0 +1,19 @@
+<%- include('../partials/header', { title: 'Akuntansi & Pajak' }) %>
+<div class="crumbs"><a href="/">Beranda</a> &raquo; Akuntansi &amp; Pajak</div>
+<section class="section">
+  <div class="section-head"><h1>Modul Akuntansi &amp; Pajak</h1></div>
+  <p class="muted">Setiap modul berisi <b>materi</b> lalu <b>soal latihan</b> per bab. Urut dari dasar sampai lanjutan.</p>
+  <div class="dash-grid">
+    <% moduls.forEach(m => { %>
+      <a class="tile" href="/belajar/<%= m.kode %>" style="--c1:<%= m.c1 %>;--c2:<%= m.c2 %>;">
+        <span class="tile-ico"><%= m.i %></span>
+        <span class="tile-body">
+          <h3><%= m.nama %></h3>
+          <p><%= m.deskripsi %></p>
+          <span class="badge tile-badge"><%= m.jml_materi %> materi &middot; <%= m.jml_soal %> soal</span>
+        </span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+<%- include('../partials/footer') %>
