@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: soalpajakpsikotest
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        value: rahasia-bank-soal-produksi
