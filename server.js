@@ -9,6 +9,7 @@ const app = express();
 const PORT = Number(process.env.PORT || 3005);
 
 app.set('view engine', 'ejs');
+app.set('trust proxy', 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(session({
@@ -16,7 +17,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'rahasia-bank-soal-lokal',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }
+  cookie: {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
+  }
 }));
 
 app.use(locals);
@@ -34,6 +39,9 @@ app.use((err, req, res, next) => {
   res.status(500).render('error', { pesan: 'Terjadi kesalahan server: ' + err.message });
 });
 
-app.listen(PORT, () => {
-  console.log('Server berjalan di http://localhost:' + PORT);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('Server berjalan di http://localhost:' + PORT);
+  });
+}
+module.exports = app;
