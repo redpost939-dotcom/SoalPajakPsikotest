@@ -28,7 +28,7 @@ export default async function Riwayat() {
                   {daftar.map((h, i) => (
                     <tr key={h.id}>
                       <td>{i + 1}</td>
-                      <td><span className={`badge ${h.tipe === 'psikotest' ? 'ok' : ''}`}>{h.tipe === 'psikotest' ? 'PSIKOTEST' : 'MODUL'}</span></td>
+                      <td><span className={`badge ${h.tipe === 'psikotest' ? 'ok' : ''}`}>{h.tipe === 'psikotest' ? 'PSIKOTEST' : h.tipe === 'latihan' ? 'LATIHAN' : 'MODUL'}</span></td>
                       <td>{h.kategori}</td>
                       <td>{h.level}</td>
                       <td>{h.benar}</td>

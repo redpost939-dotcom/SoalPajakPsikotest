@@ -30,6 +30,12 @@ export default async function Home() {
     totalMateri = belajar.reduce((a, r) => a + Number(r.jml_materi || 0), 0);
   }
   const totalKategori = psikotest.length + belajar.length;
+  const latihan = can(user, 'latihan') ? [
+    { kode: 'mengetik', nama: 'Tes Mengetik', deskripsi: 'Ketik teks 60 detik. Diukur kecepatan (WPM) dan akurasi.', info: 'WPM + akurasi', ...warna('mengetik') },
+    { kode: 'ingatan', nama: 'Tes Daya Ingat', deskripsi: 'Hafalkan deret angka lalu tulis ulang. Melatih memori jangka pendek.', info: '5 ronde', ...warna('ingatan') },
+    { kode: 'teliti', nama: 'Tes Ketelitian', deskripsi: 'Penjumlahan cepat gaya tes koran Pauli. Melatih kecepatan + akurasi.', info: '60 detik', ...warna('teliti') },
+    { kode: 'konsentrasi', nama: 'Tes Konsentrasi', deskripsi: 'Tes Stroop: pilih warna tinta kata. Melatih fokus untuk psikotest.', info: '30 detik', ...warna('konsentrasi') }
+  ] : [];
 
   return (
     <>
@@ -91,7 +97,29 @@ export default async function Home() {
           </section>
         )}
 
-        {psikotest.length === 0 && belajar.length === 0 && (
+        {latihan.length > 0 && (
+          <section className="section">
+            <div className="section-head">
+              <h2>Menu Latihan</h2>
+              <Link className="btn btn-outline" href="/latihan">Lihat semua &rarr;</Link>
+            </div>
+            <p className="muted">Latihan keterampilan: mengetik, daya ingat, ketelitian, dan konsentrasi. Hasil tersimpan di riwayat.</p>
+            <div className="dash-grid">
+              {latihan.map((t) => (
+                <Link key={t.kode} className="tile" href={`/latihan/${t.kode}`} style={{ '--c1': t.c1, '--c2': t.c2 }}>
+                  <span className="tile-ico">{t.i}</span>
+                  <span className="tile-body">
+                    <h3>{t.nama}</h3>
+                    <p>{t.deskripsi}</p>
+                    <span className="badge tile-badge">{t.info}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {psikotest.length === 0 && belajar.length === 0 && latihan.length === 0 && (
           <section className="section">
             <p className="muted">Silakan <Link href="/login">masuk</Link> dengan akun Anda. Menu yang tersedia sesuai hak akses akun Anda.</p>
           </section>

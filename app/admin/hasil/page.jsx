@@ -20,6 +20,7 @@ export default async function AdminHasil({ searchParams }) {
           <option value="">Semua</option>
           <option value="psikotest">Psikotest</option>
           <option value="belajar">Modul</option>
+          <option value="latihan">Latihan</option>
         </select>
         <button className="btn btn-sm btn-outline" type="submit">Terapkan</button>
       </form>

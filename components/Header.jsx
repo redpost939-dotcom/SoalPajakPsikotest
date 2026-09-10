@@ -9,6 +9,7 @@ export default function Header({ user }) {
         <nav>
           {user && can(user, 'psikotest') && <Link href="/psikotest">Psikotest</Link>}
           {user && can(user, 'belajar') && <Link href="/belajar">Akuntansi &amp; Pajak</Link>}
+          {user && can(user, 'latihan') && <Link href="/latihan">Latihan</Link>}
           {user ? (
             <>
               <Link href="/riwayat">Riwayat</Link>
