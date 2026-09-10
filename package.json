@@ -1,22 +1,24 @@
 {
   "name": "bank-soal",
-  "version": "1.0.0",
-  "description": "Website psikotest + materi akuntansi dasar, pajak dasar, dan brevet A/B dengan database PostgreSQL",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "Website psikotest + materi akuntansi dasar, pajak dasar, dan brevet A/B dengan Next.js + PostgreSQL (Neon), siap deploy Vercel",
+  "private": true,
   "scripts": {
-    "start": "node server.js",
-    "setup": "node db/setup.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:setup": "node scripts/seed.mjs"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
     "bcryptjs": "^2.4.3",
-    "connect-pg-simple": "^9.0.1",
     "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "pg": "^8.12.0"
+    "jose": "^5.9.6",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }
