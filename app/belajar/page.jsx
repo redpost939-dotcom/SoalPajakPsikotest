@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function BelajarIndex() {
   const user = await getSession();
-  if (!user) redirect('/login?lanjut=/belajar');
+  if (!user) redirect('/#mulai');
   if (!(await canMenu(user, 'belajar'))) redirect('/');
   const sql = db();
   const rows = await sql`SELECT c.*,

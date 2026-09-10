@@ -16,7 +16,8 @@ const DAFTAR = [
 
 export default async function LatihanIndex() {
   const user = await getSession();
-  if (!user || !(await canMenu(user, 'latihan'))) redirect('/login?lanjut=/latihan');
+  if (!user) redirect('/#mulai');
+  if (!(await canMenu(user, 'latihan'))) redirect('/');
   const sql = db();
   const tb = await sql`SELECT kategori, MAX(skor) AS skor FROM hasil_test
     WHERE user_id = ${user.id} AND tipe = 'latihan' GROUP BY kategori`;

@@ -8,7 +8,8 @@ export const dynamic = 'force-dynamic';
 
 export default async function KonsentrasiPage() {
   const user = await getSession();
-  if (!user || !(await canMenu(user, 'latihan'))) redirect('/login?lanjut=/latihan/konsentrasi');
+  if (!user) redirect('/#mulai');
+  if (!(await canMenu(user, 'latihan'))) redirect('/');
   return (
     <>
       <Header user={user} />

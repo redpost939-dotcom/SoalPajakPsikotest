@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function BelajarModul({ params }) {
   const user = await getSession();
-  if (!user) redirect('/login?lanjut=/belajar');
+  if (!user) redirect('/#mulai');
   if (!(await canMenu(user, 'belajar'))) redirect('/');
   const { kode } = await params;
   const sql = db();

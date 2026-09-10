@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function PsikotestKuis({ params, searchParams }) {
   const user = await getSession();
-  if (!user) redirect('/login?lanjut=/psikotest');
+  if (!user) redirect('/#mulai');
   if (!(await canMenu(user, 'psikotest'))) redirect('/');
   const { kode } = await params;
   const sp = await searchParams;

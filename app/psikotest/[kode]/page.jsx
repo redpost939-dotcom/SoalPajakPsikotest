@@ -10,7 +10,7 @@ const LV_LABEL = { mudah: 'Mudah', sedang: 'Sedang', sulit: 'Sulit' };
 
 export default async function PsikotestKategori({ params }) {
   const user = await getSession();
-  if (!user) redirect('/login?lanjut=/psikotest');
+  if (!user) redirect('/#mulai');
   if (!(await canMenu(user, 'psikotest'))) redirect('/');
   const { kode } = await params;
   const sql = db();

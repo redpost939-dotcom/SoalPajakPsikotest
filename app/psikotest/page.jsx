@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function PsikotestIndex() {
   const user = await getSession();
-  if (!user) redirect('/login?lanjut=/psikotest');
+  if (!user) redirect('/#mulai');
   if (!(await canMenu(user, 'psikotest'))) redirect('/');
   const sql = db();
   const rows = await sql`SELECT c.*, (SELECT COUNT(*)::int FROM questions q WHERE q.category_id = c.id) AS jml_soal
