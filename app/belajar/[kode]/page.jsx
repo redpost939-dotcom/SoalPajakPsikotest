@@ -17,6 +17,9 @@ export default async function BelajarModul({ params }) {
   const modul = cats[0];
   const materi = await sql`SELECT * FROM materi WHERE category_id = ${modul.id} ORDER BY urutan`;
   const [{ jml }] = await sql`SELECT COUNT(*)::int AS jml FROM questions WHERE category_id = ${modul.id}`;
+  const tb = await sql`SELECT MAX(skor) AS skor, COUNT(*)::int AS n FROM hasil_test
+    WHERE user_id = ${user.id} AND tipe = 'belajar' AND kategori = ${modul.nama}`;
+  const terbaik = tb[0]?.skor !== null && tb[0]?.skor !== undefined ? Number(tb[0].skor) : null;
   return (
     <>
       <Header user={user} />
@@ -36,6 +39,7 @@ export default async function BelajarModul({ params }) {
           <div className="quiz-start">
             <h2>Latihan Soal Modul Ini</h2>
             <p className="muted">{jml} soal pilihan ganda. Setelah selesai Anda bisa melihat kunci jawaban dan pembahasan.</p>
+            <p>{terbaik !== null ? <span className="badge ok">Skor terbaik Anda: {terbaik}% ({tb[0].n}x percobaan)</span> : <span className="badge">Belum dikerjakan</span>}</p>
             {jml > 0
               ? <Link className="btn btn-primary" href={`/belajar/${kode}/kuis`}>Mulai Kuis &rarr;</Link>
               : <button className="btn btn-primary" disabled>Mulai Kuis &rarr;</button>}

@@ -74,6 +74,7 @@ async function main() {
 
   for (const u of [
     { username: 'admin', password: 'admin123', nama: 'Master Admin', role: 'admin' },
+    { username: 'manager', password: 'manager123', nama: 'Manager Demo', role: 'manager' },
     { username: 'user', password: 'user123', nama: 'User Demo', role: 'user' }
   ]) {
     const hash = bcrypt.hashSync(u.password, 10);
@@ -81,7 +82,7 @@ async function main() {
       VALUES (${u.username}, ${hash}, ${u.nama}, ${u.role})
       ON CONFLICT (username) DO NOTHING`;
   }
-  console.log('User default siap (admin/admin123 dan user/user123).');
+  console.log('User default siap (admin/admin123, manager/manager123, user/user123).');
 
   const cat = await sql`SELECT tipe, COUNT(*) FROM categories GROUP BY tipe`;
   const q = await sql`SELECT COUNT(*) AS n FROM questions`;

@@ -17,10 +17,17 @@ export default async function PsikotestKategori({ params }) {
   const cats = await sql`SELECT * FROM categories WHERE kode = ${kode} AND tipe = 'psikotest'`;
   if (cats.length === 0) notFound();
   const kategori = cats[0];
-  const levels = await sql`SELECT level, COUNT(*)::int AS jml FROM questions
-    WHERE category_id = ${kategori.id} GROUP BY level`;
+  const [levels, terbaik] = await Promise.all([
+    sql`SELECT level, COUNT(*)::int AS jml FROM questions
+      WHERE category_id = ${kategori.id} GROUP BY level`,
+    sql`SELECT level, MAX(skor) AS skor FROM hasil_test
+      WHERE user_id = ${user.id} AND tipe = 'psikotest' AND kategori = ${kategori.nama}
+      GROUP BY level`
+  ]);
   const order = { mudah: 1, sedang: 2, sulit: 3 };
   levels.sort((a, b) => (order[a.level] || 9) - (order[b.level] || 9));
+  const skorMap = Object.fromEntries(terbaik.map((t) => [t.level, Number(t.skor)]));
+  const semuaTerbaik = terbaik.length > 0 ? Math.max(...terbaik.map((t) => Number(t.skor))) : null;
   return (
     <>
       <Header user={user} />
@@ -34,12 +41,14 @@ export default async function PsikotestKategori({ params }) {
             <Link className="card" href={`/psikotest/${kode}/kuis?level=semua`}>
               <h3>Semua (Bertahap)</h3>
               <p className="muted">Mudah &rarr; Sedang &rarr; Sulit dalam satu sesi.</p>
+              <p>{semuaTerbaik !== null ? <span className="badge ok">Terbaik: {semuaTerbaik}%</span> : <span className="badge">Belum dikerjakan</span>}</p>
               <span className="btn">Mulai &rarr;</span>
             </Link>
             {levels.map((l) => (
               <Link key={l.level} className="card" href={`/psikotest/${kode}/kuis?level=${l.level}`}>
                 <h3>{LV_LABEL[l.level] || l.level}</h3>
                 <p className="muted">{l.jml} soal</p>
+                <p>{skorMap[l.level] !== undefined ? <span className="badge ok">Terbaik: {skorMap[l.level]}%</span> : <span className="badge">Belum dikerjakan</span>}</p>
                 <span className="btn">Mulai &rarr;</span>
               </Link>
             ))}

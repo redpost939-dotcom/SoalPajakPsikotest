@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { db } from '@/lib/db';
 import { warna } from '@/lib/visuals';
 
 export const dynamic = 'force-dynamic';
@@ -16,6 +17,10 @@ const DAFTAR = [
 export default async function LatihanIndex() {
   const user = await getSession();
   if (!user || !(await canMenu(user, 'latihan'))) redirect('/login?lanjut=/latihan');
+  const sql = db();
+  const tb = await sql`SELECT kategori, MAX(skor) AS skor FROM hasil_test
+    WHERE user_id = ${user.id} AND tipe = 'latihan' GROUP BY kategori`;
+  const skorMap = Object.fromEntries(tb.map((t) => [t.kategori, Number(t.skor)]));
   return (
     <>
       <Header user={user} />
@@ -34,6 +39,10 @@ export default async function LatihanIndex() {
                     <h3>{t.nama}</h3>
                     <p>{t.deskripsi}</p>
                     <span className="badge tile-badge">{t.info}</span>
+                    {' '}
+                    {skorMap[t.nama] !== undefined
+                      ? <span className="badge ok">Terbaik: {skorMap[t.nama]}%</span>
+                      : <span className="badge">Belum dicoba</span>}
                   </span>
                 </Link>
               );
