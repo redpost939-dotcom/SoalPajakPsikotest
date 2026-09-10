@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Ingatan from '@/components/Ingatan';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default async function IngatanPage() {
   const user = await getSession();
-  if (!user || !can(user, 'latihan')) redirect('/login?lanjut=/latihan/ingatan');
+  if (!user || !(await canMenu(user, 'latihan'))) redirect('/login?lanjut=/latihan/ingatan');
   return (
     <>
       <Header user={user} />

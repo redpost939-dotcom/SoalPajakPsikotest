@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { penilaianKategori } from '@/lib/penilaian';
 
 export async function POST(req) {
@@ -17,7 +17,7 @@ export async function POST(req) {
   if ((tipe !== 'psikotest' && tipe !== 'belajar') || !kode || !Array.isArray(ids) || ids.length === 0) {
     return NextResponse.json({ pesan: 'Data kuis tidak valid.' }, { status: 400 });
   }
-  if (!can(user, menu)) return NextResponse.json({ pesan: 'Akses ditolak.' }, { status: 403 });
+  if (!(await canMenu(user, menu))) return NextResponse.json({ pesan: 'Akses ditolak.' }, { status: 403 });
 
   const sql = db();
   const cat = tipe === 'psikotest'

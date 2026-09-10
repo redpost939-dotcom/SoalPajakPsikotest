@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 
 export async function POST(req) {
   const user = await getSession();
-  if (!user || !can(user, 'latihan')) {
+  if (!user || !(await canMenu(user, 'latihan'))) {
     return NextResponse.json({ pesan: 'Silakan masuk dulu.' }, { status: 401 });
   }
   let body;

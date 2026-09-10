@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
-import { getSession } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect, notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 
@@ -11,6 +11,7 @@ const LV_LABEL = { mudah: 'Mudah', sedang: 'Sedang', sulit: 'Sulit' };
 export default async function PsikotestKategori({ params }) {
   const user = await getSession();
   if (!user) redirect('/login?lanjut=/psikotest');
+  if (!(await canMenu(user, 'psikotest'))) redirect('/');
   const { kode } = await params;
   const sql = db();
   const cats = await sql`SELECT * FROM categories WHERE kode = ${kode} AND tipe = 'psikotest'`;

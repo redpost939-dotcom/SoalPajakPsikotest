@@ -5,7 +5,8 @@ const ITEMS = [
   ['/admin/kategori', 'Kategori'],
   ['/admin/soal', 'Soal'],
   ['/admin/materi', 'Materi'],
-  ['/admin/user', 'User'],
+  ['/admin/user', 'Master User'],
+  ['/admin/level', 'Master Level'],
   ['/admin/hasil', 'Hasil']
 ];
 

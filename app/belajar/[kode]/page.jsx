@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
-import { getSession } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect, notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 
@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 export default async function BelajarModul({ params }) {
   const user = await getSession();
   if (!user) redirect('/login?lanjut=/belajar');
+  if (!(await canMenu(user, 'belajar'))) redirect('/');
   const { kode } = await params;
   const sql = db();
   const cats = await sql`SELECT * FROM categories WHERE kode = ${kode} AND tipe IN ('akuntansi','pajak')`;

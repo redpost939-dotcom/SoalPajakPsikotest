@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Teliti from '@/components/Teliti';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TelitiPage() {
   const user = await getSession();
-  if (!user || !can(user, 'latihan')) redirect('/login?lanjut=/latihan/teliti');
+  if (!user || !(await canMenu(user, 'latihan'))) redirect('/login?lanjut=/latihan/teliti');
   return (
     <>
       <Header user={user} />

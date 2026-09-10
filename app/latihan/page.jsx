@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { warna } from '@/lib/visuals';
 
@@ -15,7 +15,7 @@ const DAFTAR = [
 
 export default async function LatihanIndex() {
   const user = await getSession();
-  if (!user || !can(user, 'latihan')) redirect('/login?lanjut=/latihan');
+  if (!user || !(await canMenu(user, 'latihan'))) redirect('/login?lanjut=/latihan');
   return (
     <>
       <Header user={user} />

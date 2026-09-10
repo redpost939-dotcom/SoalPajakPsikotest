@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import QuizRunner from '@/components/QuizRunner';
-import { getSession } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 export default async function BelajarKuis({ params }) {
   const user = await getSession();
   if (!user) redirect('/login?lanjut=/belajar');
+  if (!(await canMenu(user, 'belajar'))) redirect('/');
   const { kode } = await params;
   return (
     <>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { warna } from '@/lib/visuals';
 
@@ -12,25 +12,31 @@ export default async function Home() {
   let belajar = [];
   let totalSoal = 0;
   let totalMateri = 0;
+  let sayaStats = { tes: 0, rata: 0, rata_psi: 0 };
 
   if (user) {
     const sql = db();
-    const [psiko, modul, stat] = await Promise.all([
+    const [psiko, modul, stat, saya] = await Promise.all([
       sql`SELECT c.*, (SELECT COUNT(*)::int FROM questions q WHERE q.category_id = c.id) AS jml_soal
           FROM categories c WHERE c.tipe = 'psikotest' ORDER BY c.urutan`,
       sql`SELECT c.*,
             (SELECT COUNT(*)::int FROM questions q WHERE q.category_id = c.id) AS jml_soal,
             (SELECT COUNT(*)::int FROM materi m WHERE m.category_id = c.id) AS jml_materi
           FROM categories c WHERE c.tipe IN ('akuntansi','pajak') ORDER BY c.urutan`,
-      sql`SELECT COUNT(*)::int AS total FROM questions`
+      sql`SELECT COUNT(*)::int AS total FROM questions`,
+      sql`SELECT COUNT(*)::int AS tes, ROUND(AVG(skor),1) AS rata,
+          ROUND(AVG(CASE WHEN tipe = 'psikotest' THEN skor END),1) AS rata_psi
+        FROM hasil_test WHERE user_id = ${user.id}`
     ]);
-    if (can(user, 'psikotest')) psikotest = psiko.map((k) => ({ ...k, ...warna(k.kode) }));
-    if (can(user, 'belajar')) belajar = modul.map((k) => ({ ...k, ...warna(k.kode) }));
+    const [bolehPsi, bolehBel] = await Promise.all([canMenu(user, 'psikotest'), canMenu(user, 'belajar')]);
+    if (bolehPsi) psikotest = psiko.map((k) => ({ ...k, ...warna(k.kode) }));
+    if (bolehBel) belajar = modul.map((k) => ({ ...k, ...warna(k.kode) }));
     totalSoal = stat[0]?.total || 0;
     totalMateri = belajar.reduce((a, r) => a + Number(r.jml_materi || 0), 0);
+    sayaStats = saya[0] || { tes: 0, rata: 0, rata_psi: 0 };
   }
   const totalKategori = psikotest.length + belajar.length;
-  const latihan = can(user, 'latihan') ? [
+  const latihan = user && (await canMenu(user, 'latihan')) ? [
     { kode: 'mengetik', nama: 'Tes Mengetik', deskripsi: 'Ketik teks 60 detik. Diukur kecepatan (WPM) dan akurasi.', info: 'WPM + akurasi', ...warna('mengetik') },
     { kode: 'ingatan', nama: 'Tes Daya Ingat', deskripsi: 'Hafalkan deret angka lalu tulis ulang. Melatih memori jangka pendek.', info: '5 ronde', ...warna('ingatan') },
     { kode: 'teliti', nama: 'Tes Ketelitian', deskripsi: 'Penjumlahan cepat gaya tes koran Pauli. Melatih kecepatan + akurasi.', info: '60 detik', ...warna('teliti') },
@@ -52,6 +58,22 @@ export default async function Home() {
             </div>
           )}
         </section>
+
+        {user && (
+          <section className="section">
+            <div className="section-head"><h2>Ringkasan Saya</h2><Link className="btn btn-outline" href="/riwayat">Riwayat &rarr;</Link></div>
+            <div className="stat-grid">
+              <div className="stat"><b>{sayaStats.tes}</b><span>Tes Dikerjakan</span></div>
+              <div className="stat"><b>{sayaStats.rata ?? 0}%</b><span>Rata-rata Skor</span></div>
+              <div className="stat"><b>{sayaStats.rata_psi ?? 0}%</b><span>Rata-rata Psikotest</span></div>
+            </div>
+            <div className="grid mt">
+              {psikotest.length > 0 && <Link className="btn btn-primary" href="/psikotest">Mulai Psikotest &rarr;</Link>}
+              {belajar.length > 0 && <Link className="btn btn-primary" href="/belajar">Belajar Akuntansi &amp; Pajak &rarr;</Link>}
+              {latihan.length > 0 && <Link className="btn btn-primary" href="/latihan">Latihan Keterampilan &rarr;</Link>}
+            </div>
+          </section>
+        )}
 
         {psikotest.length > 0 && (
           <section className="section">

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
-import { getSession } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { warna } from '@/lib/visuals';
@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic';
 export default async function BelajarIndex() {
   const user = await getSession();
   if (!user) redirect('/login?lanjut=/belajar');
+  if (!(await canMenu(user, 'belajar'))) redirect('/');
   const sql = db();
   const rows = await sql`SELECT c.*,
       (SELECT COUNT(*)::int FROM questions q WHERE q.category_id = c.id) AS jml_soal,

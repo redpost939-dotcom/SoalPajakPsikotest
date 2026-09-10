@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 
 const LV = { mudah: 1, sedang: 2, sulit: 3 };
 
@@ -8,7 +8,7 @@ export async function GET(req, { params }) {
   const user = await getSession();
   const { tipe, kode } = await params;
   const menu = tipe === 'psikotest' ? 'psikotest' : 'belajar';
-  if (!user || !can(user, menu)) {
+  if (!user || !(await canMenu(user, menu))) {
     return NextResponse.json({ pesan: 'Akses ditolak. Silakan masuk.' }, { status: 403 });
   }
   const { searchParams } = new URL(req.url);

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import QuizRunner from '@/components/QuizRunner';
-import { getSession } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 export default async function PsikotestKuis({ params, searchParams }) {
   const user = await getSession();
   if (!user) redirect('/login?lanjut=/psikotest');
+  if (!(await canMenu(user, 'psikotest'))) redirect('/');
   const { kode } = await params;
   const sp = await searchParams;
   const level = sp?.level || 'semua';

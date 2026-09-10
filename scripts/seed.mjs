@@ -53,6 +53,19 @@ async function main() {
 
   await sql`TRUNCATE questions, materi, categories, hasil_test RESTART IDENTITY CASCADE`;
 
+  for (const r of [
+    { kode: 'admin', nama: 'Admin', menus: ['psikotest', 'belajar', 'latihan', 'admin'] },
+    { kode: 'manager', nama: 'Manager Perusahaan', menus: ['psikotest', 'belajar', 'latihan'] },
+    { kode: 'user', nama: 'Peserta', menus: ['psikotest', 'belajar', 'latihan'] },
+    { kode: 'psikotest', nama: 'Peserta Psikotest', menus: ['psikotest', 'latihan'] },
+    { kode: 'akuntansi', nama: 'Peserta Akuntansi/Pajak', menus: ['belajar', 'latihan'] }
+  ]) {
+    await sql`INSERT INTO roles (kode, nama, menus)
+      VALUES (${r.kode}, ${r.nama}, ${r.menus})
+      ON CONFLICT (kode) DO NOTHING`;
+  }
+  console.log('Seed "roles" selesai.');
+
   for (const name of ['psikotest', 'akuntansi', 'brevet-a', 'brevet-b', 'pbb-bphtb']) {
     const seed = require(path.join(root, 'db', 'seed', name + '.js'));
     await importSeed(seed);

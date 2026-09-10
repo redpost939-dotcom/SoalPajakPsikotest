@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Konsentrasi from '@/components/Konsentrasi';
-import { getSession, can } from '@/lib/auth';
+import { getSession, canMenu } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default async function KonsentrasiPage() {
   const user = await getSession();
-  if (!user || !can(user, 'latihan')) redirect('/login?lanjut=/latihan/konsentrasi');
+  if (!user || !(await canMenu(user, 'latihan'))) redirect('/login?lanjut=/latihan/konsentrasi');
   return (
     <>
       <Header user={user} />
