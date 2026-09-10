@@ -8,9 +8,11 @@ export const dynamic = 'force-dynamic';
 
 export default async function Riwayat() {
   const user = await getSession();
-  if (!user) redirect('/login?lanjut=/riwayat');
+  if (!user) redirect('/#mulai');
   const sql = db();
-  const daftar = await sql`SELECT * FROM hasil_test WHERE user_id = ${user.id} ORDER BY id DESC LIMIT 100`;
+  const daftar = user.tamu || user.id === null
+    ? await sql`SELECT * FROM hasil_test WHERE user_id IS NULL AND LOWER(nama) = LOWER(${user.nama}) ORDER BY id DESC LIMIT 100`
+    : await sql`SELECT * FROM hasil_test WHERE user_id = ${user.id} ORDER BY id DESC LIMIT 100`;
   return (
     <>
       <Header user={user} />

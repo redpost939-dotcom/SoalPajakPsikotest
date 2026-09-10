@@ -21,7 +21,8 @@ export async function POST(req) {
   }
   const skor = Math.round((b / t) * 100 * 100) / 100;
   const sql = db();
-  await sql`INSERT INTO hasil_test (user_id, tipe, kategori, level, total_soal, benar, skor, detail)
-    VALUES (${user.id}, 'latihan', ${String(kategori).slice(0, 120)}, '-', ${t}, ${b}, ${skor}, ${detail ? JSON.stringify(detail) : null}::jsonb)`;
+  await sql`INSERT INTO hasil_test (user_id, tipe, kategori, level, total_soal, benar, skor, detail, nama, umur, alamat)
+    VALUES (${user.id ?? null}, 'latihan', ${String(kategori).slice(0, 120)}, '-', ${t}, ${b}, ${skor}, ${detail ? JSON.stringify(detail) : null}::jsonb,
+      ${user.tamu ? user.nama : null}, ${user.tamu ? user.umur : null}, ${user.tamu ? user.alamat : null})`;
   return NextResponse.json({ ok: true, skor });
 }

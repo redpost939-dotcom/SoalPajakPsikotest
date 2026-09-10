@@ -14,16 +14,17 @@ export default async function Manager({ searchParams }) {
   const tipe = sp?.tipe || '';
   const sql = db();
 
+  const cari = '%' + q + '%';
   let daftar;
   if (q && tipe) {
     daftar = await sql`SELECT h.*, u.username, u.nama AS nama_user FROM hasil_test h
       LEFT JOIN users u ON u.id = h.user_id
-      WHERE (u.username ILIKE ${'%' + q + '%'} OR u.nama ILIKE ${'%' + q + '%'}) AND h.tipe = ${tipe}
+      WHERE (u.username ILIKE ${cari} OR u.nama ILIKE ${cari} OR h.nama ILIKE ${cari} OR h.alamat ILIKE ${cari}) AND h.tipe = ${tipe}
       ORDER BY h.id DESC LIMIT 200`;
   } else if (q) {
     daftar = await sql`SELECT h.*, u.username, u.nama AS nama_user FROM hasil_test h
       LEFT JOIN users u ON u.id = h.user_id
-      WHERE (u.username ILIKE ${'%' + q + '%'} OR u.nama ILIKE ${'%' + q + '%'})
+      WHERE (u.username ILIKE ${cari} OR u.nama ILIKE ${cari} OR h.nama ILIKE ${cari} OR h.alamat ILIKE ${cari})
       ORDER BY h.id DESC LIMIT 200`;
   } else if (tipe) {
     daftar = await sql`SELECT h.*, u.username, u.nama AS nama_user FROM hasil_test h
@@ -34,7 +35,7 @@ export default async function Manager({ searchParams }) {
       LEFT JOIN users u ON u.id = h.user_id ORDER BY h.id DESC LIMIT 200`;
   }
   const [kandidat, tes, rata] = await Promise.all([
-    sql`SELECT COUNT(DISTINCT user_id)::int AS n FROM hasil_test WHERE user_id IS NOT NULL`,
+    sql`SELECT COUNT(*)::int AS n FROM (SELECT DISTINCT COALESCE(user_id::text, 'tamu:' || LOWER(nama)) FROM hasil_test) s`,
     sql`SELECT COUNT(*)::int AS n FROM hasil_test`,
     sql`SELECT ROUND(AVG(skor),1) AS n FROM hasil_test`
   ]);
@@ -70,12 +71,14 @@ export default async function Manager({ searchParams }) {
           </form>
           <div className="table-wrap">
             <table className="table">
-              <thead><tr><th>No</th><th>Kandidat</th><th>Tipe</th><th>Kategori</th><th>Benar</th><th>Skor</th><th>Tanggal</th></tr></thead>
+              <thead><tr><th>No</th><th>Kandidat</th><th>Umur</th><th>Alamat</th><th>Tipe</th><th>Kategori</th><th>Benar</th><th>Skor</th><th>Tanggal</th></tr></thead>
               <tbody>
                 {daftar.map((h, i) => (
                   <tr key={h.id}>
                     <td>{i + 1}</td>
-                    <td>{h.nama_user || h.username || '-'}</td>
+                    <td>{h.nama_user || h.nama || h.username || '-'}</td>
+                    <td>{h.umur ?? '-'}</td>
+                    <td className="maxw">{h.alamat || '-'}</td>
                     <td><span className="badge">{h.tipe}</span></td>
                     <td className="maxw">{h.kategori}</td>
                     <td>{h.benar}/{h.total_soal}</td>

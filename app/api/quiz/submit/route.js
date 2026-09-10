@@ -48,8 +48,9 @@ export async function POST(req) {
     kunci: r.soal ? r.soal.kunci : 0,
     benar: r.isBenar
   }));
-  await sql`INSERT INTO hasil_test (user_id, tipe, kategori, level, total_soal, benar, skor, detail)
-    VALUES (${user.id}, ${tipe}, ${cat.nama}, ${String(level)}, ${total}, ${benar}, ${skor}, ${JSON.stringify(detail)}::jsonb)`;
+  await sql`INSERT INTO hasil_test (user_id, tipe, kategori, level, total_soal, benar, skor, detail, nama, umur, alamat)
+    VALUES (${user.id ?? null}, ${tipe}, ${cat.nama}, ${String(level)}, ${total}, ${benar}, ${skor}, ${JSON.stringify(detail)}::jsonb,
+      ${user.tamu ? user.nama : null}, ${user.tamu ? user.umur : null}, ${user.tamu ? user.alamat : null})`;
 
   const hasil = { tipe, kode, kategori: cat.nama, level: String(level), total, benar, skor, review };
   if (tipe === 'psikotest') {

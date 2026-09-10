@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
+import TamuForm from '@/components/TamuForm';
 import { getSession, canMenu } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { warna } from '@/lib/visuals';
@@ -141,9 +142,10 @@ export default async function Home() {
           </section>
         )}
 
-        {psikotest.length === 0 && belajar.length === 0 && latihan.length === 0 && (
+        {!user && (
           <section className="section">
-            <p className="muted">Silakan <Link href="/login">masuk</Link> dengan akun Anda. Menu yang tersedia sesuai hak akses akun Anda.</p>
+            <TamuForm />
+            <p className="muted mt">Staff (admin/manager)? <Link href="/login">Masuk di sini</Link>.</p>
           </section>
         )}
       </main>

@@ -1,4 +1,5 @@
 import { AdminShell } from '../layout';
+import StaffForm from '@/components/StaffForm';
 import { db } from '@/lib/db';
 import { getRoleMap } from '@/lib/roles';
 import { ubahRole, resetPassword, hapusUser } from '@/lib/actions';
@@ -20,6 +21,7 @@ export default async function AdminUser({ searchParams }) {
   const roleList = Object.entries(roles).map(([kode, r]) => ({ kode, nama: r.nama }));
   return (
     <AdminShell aktif="/admin/user" judul="Master User">
+      <StaffForm roles={roleList} />
       <form className="filter-bar" method="get" action="/admin/user">
         <label>Cari user:</label>
         <input name="q" defaultValue={q} placeholder="nama / username" style={{ border: '1px solid var(--line)', borderRadius: 8, padding: '7px 10px' }} />

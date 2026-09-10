@@ -24,13 +24,13 @@ export default async function Header({ user }) {
               <Link href="/riwayat">Riwayat</Link>
               {manager && <Link href="/manager">Manager</Link>}
               {admin && <Link href="/admin" className="nav-admin">Admin</Link>}
-              <span className="nav-user">{user.nama} ({user.username})</span>
+              <span className="nav-user">{user.nama}{user.tamu ? '' : ` (${user.username})`}</span>
               <Link href="/logout">Keluar</Link>
             </>
           ) : (
             <>
-              <Link href="/login">Masuk</Link>
-              <Link href="/register">Daftar</Link>
+              <Link href="/#mulai">Mulai</Link>
+              <Link href="/login">Staff</Link>
             </>
           )}
         </nav>

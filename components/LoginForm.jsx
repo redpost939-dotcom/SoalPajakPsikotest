@@ -10,6 +10,7 @@ export default function LoginForm({ lanjut }) {
     <div className="auth-wrap">
       <div className="auth-card">
         <h1>Masuk</h1>
+        <p className="muted">Punya akun staff/peserta? Masuk di sini. Belum punya? Cukup isi nama di <Link href="/#mulai">beranda</Link> — tanpa daftar.</p>
         {state?.pesan && <div className="alert alert-error">{state.pesan}</div>}
         <form action={action}>
           <input type="hidden" name="lanjut" value={lanjut} />
@@ -23,7 +24,6 @@ export default function LoginForm({ lanjut }) {
           </div>
           <button className="btn btn-primary" type="submit">Masuk</button>
         </form>
-        <p className="muted mt">Belum punya akun? <Link href="/register">Daftar di sini</Link></p>
       </div>
     </div>
   );

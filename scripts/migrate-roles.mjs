@@ -7,7 +7,8 @@ export const DEFAULT_ROLES = [
   { kode: 'manager', nama: 'Manager Perusahaan', menus: ['psikotest', 'belajar', 'latihan'] },
   { kode: 'user', nama: 'Peserta', menus: ['psikotest', 'belajar', 'latihan'] },
   { kode: 'psikotest', nama: 'Peserta Psikotest', menus: ['psikotest', 'latihan'] },
-  { kode: 'akuntansi', nama: 'Peserta Akuntansi/Pajak', menus: ['belajar', 'latihan'] }
+  { kode: 'akuntansi', nama: 'Peserta Akuntansi/Pajak', menus: ['belajar', 'latihan'] },
+  { kode: 'tamu', nama: 'Peserta Tamu', menus: ['psikotest', 'belajar', 'latihan'] }
 ];
 
 const url = process.env.DATABASE_URL;
