@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import TamuForm from '@/components/TamuForm';
+import TamuRestore from '@/components/TamuRestore';
 import { getSession, canMenu } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { warna } from '@/lib/visuals';
@@ -144,6 +145,7 @@ export default async function Home() {
 
         {!user && (
           <section className="section">
+            <TamuRestore />
             <TamuForm />
             <p className="muted mt">Staff (admin/manager)? <Link href="/login">Masuk di sini</Link>.</p>
           </section>

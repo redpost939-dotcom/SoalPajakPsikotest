@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import LogoutLink from './LogoutLink';
 import { canMenu } from '@/lib/roles';
 
 export default async function Header({ user }) {
@@ -25,7 +26,7 @@ export default async function Header({ user }) {
               {manager && <Link href="/manager">Manager</Link>}
               {admin && <Link href="/admin" className="nav-admin">Admin</Link>}
               <span className="nav-user">{user.nama}{user.tamu ? '' : ` (${user.username})`}</span>
-              <Link href="/logout">Keluar</Link>
+              <LogoutLink />
             </>
           ) : (
             <>

@@ -2,15 +2,20 @@
 
 import { useActionState } from 'react';
 import { tamuAction } from '@/lib/actions';
+import { simpanTamuLocal } from '@/lib/tamu-local';
 
 export default function TamuForm() {
   const [state, action, isPending] = useActionState(tamuAction, null);
+
+  function simpanLokal(form) {
+    simpanTamuLocal(form.nama.value, form.umur.value ? Number(form.umur.value) : null, form.alamat.value);
+  }
   return (
     <div className="quiz-start" id="mulai">
       <h2>Mulai Tanpa Daftar</h2>
       <p className="muted">Isi nama, umur, dan alamat — langsung buka semua menu latihan. Tanpa username &amp; password.</p>
       {state?.pesan && <div className="alert alert-error">{state.pesan}</div>}
-      <form action={action}>
+      <form action={action} onSubmit={(e) => simpanLokal(e.currentTarget)}>
         <div className="form-row">
           <div className="form-group">
             <label>Nama Lengkap *</label>
