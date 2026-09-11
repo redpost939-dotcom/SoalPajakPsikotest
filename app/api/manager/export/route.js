@@ -1,6 +1,8 @@
 import { getSession, canMenu } from '@/lib/auth';
 import { db } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
   const user = await getSession();
   if (!user || !(await canMenu(user, 'manager'))) {

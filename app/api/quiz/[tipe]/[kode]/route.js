@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getSession, canMenu } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 const LV = { mudah: 1, sedang: 2, sulit: 3 };
 
 export async function GET(req, { params }) {

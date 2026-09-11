@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { getSession, canMenu } from '@/lib/auth';
 import { penilaianKategori } from '@/lib/penilaian';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req) {
   const user = await getSession();
   if (!user) return NextResponse.json({ pesan: 'Silakan masuk dulu.' }, { status: 401 });
