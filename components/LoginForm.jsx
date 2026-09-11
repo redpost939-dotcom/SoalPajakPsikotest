@@ -5,7 +5,7 @@ import { useActionState } from 'react';
 import { loginAction } from '@/lib/actions';
 
 export default function LoginForm({ lanjut }) {
-  const [state, action] = useActionState(loginAction, null);
+  const [state, action, isPending] = useActionState(loginAction, null);
   return (
     <div className="auth-wrap">
       <div className="auth-card">
@@ -22,7 +22,7 @@ export default function LoginForm({ lanjut }) {
             <label>Password</label>
             <input type="password" name="password" required />
           </div>
-          <button className="btn btn-primary" type="submit">Masuk</button>
+          <button className="btn btn-primary" type="submit" disabled={isPending}>{isPending ? 'Memeriksa...' : 'Masuk'}</button>
         </form>
       </div>
     </div>

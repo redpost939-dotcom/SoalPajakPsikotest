@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { tamuAction } from '@/lib/actions';
 
 export default function TamuForm() {
-  const [state, action] = useActionState(tamuAction, null);
+  const [state, action, isPending] = useActionState(tamuAction, null);
   return (
     <div className="quiz-start" id="mulai">
       <h2>Mulai Tanpa Daftar</h2>
@@ -25,7 +25,8 @@ export default function TamuForm() {
           <label>Alamat</label>
           <input type="text" name="alamat" maxLength={255} placeholder="cth: Jl. Merdeka No. 10, Surabaya" />
         </div>
-        <button className="btn btn-primary" type="submit">Masuk &amp; Mulai &rarr;</button>
+        <button className="btn btn-primary" type="submit" disabled={isPending}>{isPending ? 'Menyimpan...' : <>Masuk &amp; Mulai &rarr;</>}</button>
+        {isPending && <p className="muted">Menyimpan data, mohon tunggu sampai pindah halaman...</p>}
       </form>
     </div>
   );
